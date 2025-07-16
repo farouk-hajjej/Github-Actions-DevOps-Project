@@ -1,3 +1,4 @@
+name: Push & Pull Request  Workflow
 # Webhook base trigger on branches
 on:
   push:
