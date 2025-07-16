@@ -1,23 +1,24 @@
-# webhook base trigger on branches
+# Webhook base trigger on branches
 on:
-   push:
-     branches:
-       - main
-       - "release/**"
-     paths:
-        - "src/**"
-   pull_request:
-     branches:
-       - main
-       - "release/**"
-     paths:
-        - "src/**"
+  push:
+    branches:
+      - main
+      - release/**
+    paths:
+      - src/**
+  pull_request:
+    branches:
+      - main
+      - release/**
+    paths:
+      - src/**
+
 jobs:
   test:
-    runs-on: ubuntu-latest #runner github
+    runs-on: ubuntu-latest
     steps:
-     - name: Checkout repository 
-       uses: actions/checkout@v4.2.2
-     - name: Run tests
-       run: npm test
-    
+      - name: Checkout repository
+        uses: actions/checkout@v4.2.2
+
+      - name: Run tests
+        run: npm test
