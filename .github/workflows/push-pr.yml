@@ -4,15 +4,15 @@ on:
   push:
     branches:
       - main
-      - release/**
+      - "release/**"
     paths:
-      - src/**
+      - "src/**"
   pull_request:
     branches:
       - main
-      - release/**
+      - "release/**"
     paths:
-      - src/**
+      - "src/**"
 
 jobs:
   test:
