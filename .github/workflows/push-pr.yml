@@ -20,6 +20,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4.2.2
-
-      - name: Run tests
-        run: npm test
+      - name: Install dependencies and run tests
+        working-directory: ./mon-sous-repertoire
+        run: |
+          npm install
+          npm test
