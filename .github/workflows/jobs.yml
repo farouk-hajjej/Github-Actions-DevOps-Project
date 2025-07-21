@@ -1,0 +1,32 @@
+name: Jobs Workflow
+
+on:
+  workflow_dispatch:
+    
+
+jobs:
+  job_1:
+    # linux runner of github
+    runs-on: ubuntu-latest #runner github
+
+    steps:
+      - run:  "echo Job ${{ github.job }}!"
+
+  job_2:
+    # linux runner of github
+    runs-on: ubuntu-latest #runner github
+    needs: job_1
+    steps:
+      - run:  "echo Job ${{ github.job }}!"
+  job_3:
+    # linux runner of github
+    runs-on: ubuntu-latest #runner github
+    needs: job_1
+    steps:
+      - run:  "echo Job ${{ github.job }}!" 
+  job_4:
+    # linux runner of github
+    runs-on: ubuntu-latest #runner github
+    needs: [job_2, job_3]
+    steps:
+      - run:  "echo Job ${{ github.job }}!"        
