@@ -29,4 +29,4 @@ jobs:
     
     steps:
       - run: node --version
-      - run: echo "This whole job runs inside a Node.js contain
+      - run: echo "This whole job runs inside a Node.js container"
