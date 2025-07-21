@@ -1,0 +1,15 @@
+name: Manual Workflow
+
+on:
+# manual job GUI or github cli
+  workflow_dispatch:    
+jobs:
+  deploy:
+    runs-on: ubuntu-latest #runner github
+
+    steps:
+      - name: Deploy Application
+        run: echo "Deploying the application ... !"
+
+          
+          
