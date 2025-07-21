@@ -1,0 +1,17 @@
+name: Schedule Workflow
+
+on:
+  schedule:
+    - cron: "0 0 * * 1"
+
+jobs:
+  daily-task:
+    runs-on: ubuntu-latest #runner github
+
+    steps:
+      - name: Print message
+        run: echo "Running the scheduled task !"
+
+
+          
+          
