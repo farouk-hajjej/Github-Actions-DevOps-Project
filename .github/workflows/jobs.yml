@@ -10,23 +10,32 @@ jobs:
     runs-on: ubuntu-latest #runner github
 
     steps:
-      - run:  "echo Job ${{ github.job }}!"
+      - run: |
+          npm install
+          npm run build
+        working-directory: ./temp
+        shell: bash 
+        # pwsh, cmd, powershell, python
 
-  job_2:
+      - run: print %ENV
+        shell: perl {0}
+        # pwsh, cmd, powershell, python
+         
+#  job_2:
     # linux runner of github
-    runs-on: ubuntu-latest #runner github
-    needs: job_1
-    steps:
-      - run:  "echo Job ${{ github.job }}!"
-  job_3:
+#    runs-on: ubuntu-latest #runner github
+#    needs: job_1
+#    steps:
+#      - run:  "echo Job ${{ github.job }}!"
+#  job_3:
     # linux runner of github
-    runs-on: ubuntu-latest #runner github
-    needs: job_1
-    steps:
-      - run:  "echo Job ${{ github.job }}!" 
-  job_4:
+#    runs-on: ubuntu-latest #runner github
+#    needs: job_1
+#    steps:
+#      - run:  "echo Job ${{ github.job }}!" 
+#  job_4:
     # linux runner of github
-    runs-on: ubuntu-latest #runner github
-    needs: [job_2, job_3]
-    steps:
-      - run:  "echo Job ${{ github.job }}!"        
+#    runs-on: ubuntu-latest #runner github
+#    needs: [job_2, job_3]
+#    steps:
+#      - run:  "echo Job ${{ github.job }}!"        
