@@ -2,25 +2,27 @@ name: Jobs Workflow
 
 on:
   workflow_dispatch:
-    
 
 jobs:
   job_1:
-    # linux runner of github
-    runs-on: ubuntu-latest #runner github
+    runs-on: ubuntu-latest
 
     steps:
-      - run: |
+      - name: Checkout repository
+        uses: actions/checkout@v4.2.2
+
+      - name: Install and build
+        run: |
           npm install
           npm run build
-   #   #  working-directory: ./temp
-        shell: bash 
+        # working-directory: ./temp  # Décommente si nécessaire
+        shell: bash
         # pwsh, cmd, powershell, python
 
-      - run: print %ENV
+      - name: Print environment variable with Perl
+        run: print %ENV
         shell: perl {0}
-        # pwsh, cmd, powershell, python
-         
+
 #  job_2:
     # linux runner of github
 #    runs-on: ubuntu-latest #runner github
