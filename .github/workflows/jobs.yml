@@ -5,23 +5,37 @@ on:
 
 jobs:
   job_1:
-    runs-on: ubuntu-latest
-
+    strategy:
+      fail-fast: false
+      max-parallel: 3
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        node_version: [14.x, 15.x, 16.x]
+    runs-on: ${{ matrix.os }}
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4.2.2
+      - uses: actions/setup-node@v3.6.0
+        with:
+          node-version: ${{ matrix.node_version }}
 
-      - name: Install and build
-        run: |
-          npm install
-    #      npm run build
-        # working-directory: ./temp  # Décommente si nécessaire
-        shell: bash
-        # pwsh, cmd, powershell, python
+# jobs:
+#   job_1:
+#     runs-on: ubuntu-latest
 
-      - name: Print environment variable with Perl
-        run: print %ENV
-        shell: perl {0}
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v4.2.2
+
+#       - name: Install and build
+#         run: |
+#           npm install
+#     #      npm run build
+#         # working-directory: ./temp  # Décommente si nécessaire
+#         shell: bash
+#         # pwsh, cmd, powershell, python
+
+#       - name: Print environment variable with Perl
+#         run: print %ENV
+#         shell: perl {0}
 
 #  job_2:
     # linux runner of github
