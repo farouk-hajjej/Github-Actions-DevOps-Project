@@ -9,14 +9,10 @@ jobs:
     steps:
       - name: Run a command in Ubuntu VM
         run: echo "This runs on the Ubuntu VM"
-      
+
       - name: Run inside an Alpine container
-        uses: docker://alpine:3.14
-        with:
-          entrypoint: /bin/sh
-          args: |
-            -c "echo 'this runs inside an Alpine container'"
-      
+        run: docker run alpine:3.14 /bin/sh -c "echo this runs inside an Alpine container"
+
       - name: Run another command in Ubuntu VM
         run: echo "Back to the VM"
 
@@ -27,7 +23,6 @@ jobs:
       credentials:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
-    
     steps:
       - name: Check Node version
         run: node --version
