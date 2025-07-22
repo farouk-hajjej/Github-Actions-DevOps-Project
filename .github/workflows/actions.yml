@@ -28,5 +28,8 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
     
     steps:
-      - run: node --version
-      - run: echo "This whole job runs inside a Node.js container"
+      - name: Check Node version
+        run: node --version
+      
+      - name: Print message
+        run: echo "This whole job runs inside a Node.js container"
