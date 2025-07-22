@@ -16,17 +16,17 @@ jobs:
       - name: Run another command in Ubuntu VM
         run: echo "Back to the VM"
 
-  dockerized_job:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Log in to GitHub Container Registry
-        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login ghcr.io -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+  # dockerized_job:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Log in to GitHub Container Registry
+  #       run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login ghcr.io -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
 
-      - name: Pull custom container image
-        run: docker pull ghcr.io/my-org/my-private-image:latest
+  #     - name: Pull custom container image
+  #       run: docker pull ghcr.io/my-org/my-private-image:latest
 
-      - name: Run Node version from container
-        run: docker run ghcr.io/my-org/my-private-image:latest node --version
+  #     - name: Run Node version from container
+  #       run: docker run ghcr.io/my-org/my-private-image:latest node --version
 
-      - name: Print message
-        run: echo "This job pulls and runs a Node.js container manually"
+  #     - name: Print message
+  #       run: echo "This job pulls and runs a Node.js container manually"
