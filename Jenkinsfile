@@ -1,5 +1,6 @@
 pipeline {
-    agent any
+    agent any 
+//f
 
     environment {
         registry = "faroukhajjej1/projet-devops-test"
