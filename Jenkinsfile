@@ -1,60 +1,65 @@
 pipeline {
   agent any
 
-  tools {
-    nodejs "${NODE_VERSION}" // Le nom défini dans "Manage Jenkins > Global Tool Configuration"
+  environment {
+    NODE_VERSION = "node-20" // Doit être défini dans "Manage Jenkins > Global Tool Configuration"
+    registry = "faroukhajjej1/projet-devops"
+    registryCredential = 'dckr_pat_VVIpmnatR2f0aNGVai7aTJ3TfSM' // ID Jenkins pour DockerHub
+    dockerImage = ''
   }
 
-  environment {
-    registry = "faroukhajjej1/projet-devops"
-    registryCredential = 'dckr_pat_VVIpmnatR2f0aNGVai7aTJ3TfSM' // ID des credentials DockerHub dans Jenkinss
-    dockerImage = ''
-    NODE_VERSION = "node-20" // nom exact configuré dans Jenkins (pas un numéro de version !)
+  tools {
+    nodejs "${NODE_VERSION}"
+  }
+
+  triggers {
+    githubPush() // Déclenche automatiquement à chaque push GitHub
   }
 
   stages {
-    stage('Get Code from GitHub') {
+
+    stage('Récupération du code') {
       steps {
         echo '📦 Clonage du dépôt Git...'
         git branch: 'main', url: 'https://github.com/farouk-hajjej/Github-Actions-DevOps-Project.git'
       }
     }
 
-    stage('Date') {
+    stage('Afficher la date') {
       steps {
         script {
-          echo "📅 Date de build : ${new Date().format('MM/dd/yyyy')}"
+          echo "📅 Date de build : ${new Date().format('MM/dd/yyyy HH:mm:ss')}"
         }
       }
     }
 
-    stage('Install dependencies') {
+    stage('Installation des dépendances') {
       steps {
-        echo '📥 Installation des dépendances...'
+        echo '📥 Installation des dépendances Node.js...'
         sh 'npm install'
       }
     }
 
-    stage('Run tests') {
+    stage('Tests unitaires') {
       steps {
         echo '✅ Lancement des tests...'
-        sh 'npm test' // adapte à ton projet (ex: jest, mocha, etc.)
+        sh 'npm test'
       }
       post {
         always {
-          junit '**/test-results/*.xml' // facultatif si tu as des rapports JUnit
+          junit '**/test-results/*.xml' // Optionnel, pour rapports de test
         }
       }
     }
 
-    stage('Build') {
+    stage('Build de l\'application') {
       steps {
-        echo '⚙️ Build de l\'application...'
+        echo '⚙️ Build en cours...'
         sh 'npm run build'
       }
     }
 
-    stage('Docker Build') {
+    stage('Construction Docker') {
       steps {
         script {
           echo '🐳 Construction de l\'image Docker...'
@@ -63,36 +68,38 @@ pipeline {
       }
     }
 
-    stage('Docker Login') {
+    stage('Connexion à DockerHub') {
       steps {
         script {
           echo '🔐 Connexion à DockerHub...'
           docker.withRegistry('', registryCredential) {
-            echo 'Connecté à DockerHub'
+            echo '✅ Connecté avec succès'
           }
         }
       }
     }
 
-    stage('Docker Push') {
+    stage('Push Docker') {
       steps {
         script {
-          echo '🚀 Push de l\'image Docker...'
-          dockerImage.push()
+          echo '🚀 Push de l\'image vers DockerHub...'
+          docker.withRegistry('', registryCredential) {
+            dockerImage.push()
+          }
         }
       }
     }
 
-    stage('Cleanup') {
+    stage('Nettoyage Docker local') {
       steps {
-        echo '🧹 Nettoyage de l\'image locale...'
+        echo '🧹 Suppression de l\'image locale...'
         sh "docker rmi ${registry}:${env.BUILD_NUMBER} || true"
       }
     }
 
-    stage('Docker Compose Deploy') {
+    stage('Déploiement via Docker Compose') {
       steps {
-        echo '📦 Déploiement avec docker-compose...'
+        echo '📦 Déploiement avec Docker Compose...'
         sh 'docker-compose up -d --build'
       }
     }
@@ -102,14 +109,14 @@ pipeline {
     success {
       mail to: "hajjej.farouk6@gmail.com",
            from: "jenkins@example.com",
-           subject: "✅ SUCCESS: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}",
-           body: "Build succeeded!\nVoir les détails ici : ${env.BUILD_URL}"
+           subject: "✅ SUCCESS: Job ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+           body: "Le build a réussi.\nVoir les détails : ${env.BUILD_URL}"
     }
     failure {
       mail to: "hajjej.farouk6@gmail.com",
            from: "jenkins@example.com",
-           subject: "❌ FAILURE: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}",
-           body: "Build failed!\nVoir les détails ici : ${env.BUILD_URL}"
+           subject: "❌ FAILURE: Job ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+           body: "Le build a échoué.\nVoir les détails : ${env.BUILD_URL}"
     }
   }
 }
