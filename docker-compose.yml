@@ -1,0 +1,41 @@
+version: "3.8"
+
+services:
+  db: 
+    image: mysql:8.0 
+    environment: 
+      - MYSQL_DATABASE=appdb 
+      - MYSQL_PASSWORD=pass123 
+      - MYSQL_ROOT_PASSWORD=pass123 
+    networks:
+      -  app-network
+    ports:
+      - 3307:3306 
+    volumes:
+      - ./script.sql:/docker-entrypoint-initdb.d/script.sql
+
+  smoft-backend: 
+    build: 
+      context: ./backend 
+      dockerfile: Dockerfile 
+    ports:
+      - 3000:3000 
+    networks:
+      - app-network 
+    depends_on:
+      - db 
+
+  smoft-frontend: 
+    restart: always
+    build: 
+      context: ./frontend 
+    ports:
+      - 3001:3000 
+    networks:
+      - app-network 
+    depends_on:
+      - smoft-backend
+
+networks:
+  app-network: 
+    driver: bridge 
