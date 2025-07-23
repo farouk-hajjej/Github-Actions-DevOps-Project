@@ -7,7 +7,7 @@ pipeline {
 
   environment {
     registry = "faroukhajjej1/projet-devops"
-    registryCredential = 'dckr_pat_VVIpmnatR2f0aNGVai7aTJ3TfSM' // ID des credentials DockerHub dans Jenkins
+    registryCredential = 'dckr_pat_VVIpmnatR2f0aNGVai7aTJ3TfSM' // ID des credentials DockerHub dans Jenkinss
     dockerImage = ''
     NODE_VERSION = "node-20" // nom exact configuré dans Jenkins (pas un numéro de version !)
   }
