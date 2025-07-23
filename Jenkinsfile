@@ -1,6 +1,5 @@
 pipeline {
-    agent any 
-//f
+    agent any
 
     environment {
         registry = "faroukhajjej1/projet-devops-test"
@@ -26,8 +25,8 @@ pipeline {
                 }
             }
         }
-    }
-    stage('Install Dependencies') {
+
+        stage('Install Dependencies') {
             steps {
                 echo 'Running npm install...'
                 sh 'npm install'
