@@ -16,7 +16,7 @@ pipeline {
     stage('Get Code from GitHub') {
       steps {
         echo '📦 Clonage du dépôt Git...'
-        git branch: 'main', url: 'https://github.com/farouk-hajjej/Devops-Projet-5SE1.git'
+        git branch: 'main', url: 'https://github.com/farouk-hajjej/Github-Actions-DevOps-Project.git'
       }
     }
 
