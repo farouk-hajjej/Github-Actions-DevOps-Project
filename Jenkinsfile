@@ -1,16 +1,21 @@
 pipeline {
+  agent any
+
+  tools {
+    nodejs "${NODE_VERSION}" // Le nom défini dans "Manage Jenkins > Global Tool Configuration"
+  }
+
   environment {
     registry = "faroukhajjej1/projet-devops"
-    registryCredential = 'dckr_pat_VVIpmnatR2f0aNGVai7aTJ3TfSM' // ID credential Docker dans Jenkins
+    registryCredential = 'dckr_pat_VVIpmnatR2f0aNGVai7aTJ3TfSM' // ID des credentials DockerHub dans Jenkins
     dockerImage = ''
-    NODE_VERSION = "20.0.0" // ou autre version Node installée dans Jenkins NodeJS pluginn
+    NODE_VERSION = "node-20" // nom exact configuré dans Jenkins (pas un numéro de version !)
   }
-  agent any
 
   stages {
     stage('Get Code from GitHub') {
       steps {
-        echo 'Pulling code...'
+        echo '📦 Clonage du dépôt Git...'
         git branch: 'main', url: 'https://github.com/farouk-hajjej/Devops-Projet-5SE1.git'
       }
     }
@@ -18,37 +23,41 @@ pipeline {
     stage('Date') {
       steps {
         script {
-          echo "Build date: ${new Date().format('MM/dd/yyyy')}"
+          echo "📅 Date de build : ${new Date().format('MM/dd/yyyy')}"
         }
       }
     }
 
     stage('Install dependencies') {
       steps {
+        echo '📥 Installation des dépendances...'
         sh 'npm install'
       }
     }
 
     stage('Run tests') {
       steps {
-        sh 'npm test' // adapte selon ton script test (jest, mocha, etc.)
+        echo '✅ Lancement des tests...'
+        sh 'npm test' // adapte à ton projet (ex: jest, mocha, etc.)
       }
       post {
         always {
-          junit '**/test-results/*.xml' // si tu génères des rapports JUnit
+          junit '**/test-results/*.xml' // facultatif si tu as des rapports JUnit
         }
       }
     }
 
     stage('Build') {
       steps {
-        sh 'npm run build' // build React ou NestJS
+        echo '⚙️ Build de l\'application...'
+        sh 'npm run build'
       }
     }
 
     stage('Docker Build') {
       steps {
         script {
+          echo '🐳 Construction de l\'image Docker...'
           dockerImage = docker.build("${registry}:${env.BUILD_NUMBER}")
         }
       }
@@ -57,8 +66,9 @@ pipeline {
     stage('Docker Login') {
       steps {
         script {
+          echo '🔐 Connexion à DockerHub...'
           docker.withRegistry('', registryCredential) {
-            echo 'Logged in to Docker registry'
+            echo 'Connecté à DockerHub'
           }
         }
       }
@@ -67,6 +77,7 @@ pipeline {
     stage('Docker Push') {
       steps {
         script {
+          echo '🚀 Push de l\'image Docker...'
           dockerImage.push()
         }
       }
@@ -74,12 +85,14 @@ pipeline {
 
     stage('Cleanup') {
       steps {
-        sh "docker rmi ${registry}:${env.BUILD_NUMBER}"
+        echo '🧹 Nettoyage de l\'image locale...'
+        sh "docker rmi ${registry}:${env.BUILD_NUMBER} || true"
       }
     }
 
     stage('Docker Compose Deploy') {
       steps {
+        echo '📦 Déploiement avec docker-compose...'
         sh 'docker-compose up -d --build'
       }
     }
@@ -89,14 +102,14 @@ pipeline {
     success {
       mail to: "hajjej.farouk6@gmail.com",
            from: "jenkins@example.com",
-           subject: "SUCCESS: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}",
-           body: "Build succeeded!\nVoir les détails: ${env.BUILD_URL}"
+           subject: "✅ SUCCESS: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}",
+           body: "Build succeeded!\nVoir les détails ici : ${env.BUILD_URL}"
     }
     failure {
       mail to: "hajjej.farouk6@gmail.com",
            from: "jenkins@example.com",
-           subject: "FAILURE: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}",
-           body: "Build failed!\nVoir les détails: ${env.BUILD_URL}"
+           subject: "❌ FAILURE: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}",
+           body: "Build failed!\nVoir les détails ici : ${env.BUILD_URL}"
     }
   }
 }
