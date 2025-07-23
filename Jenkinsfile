@@ -3,7 +3,7 @@ pipeline {
     registry = "faroukhajjej1/projet-devops"
     registryCredential = 'dckr_pat_VVIpmnatR2f0aNGVai7aTJ3TfSM' // ID credential Docker dans Jenkins
     dockerImage = ''
-    NODE_VERSION = "20.0.0" // ou autre version Node installée dans Jenkins NodeJS plugin
+    NODE_VERSION = "20.0.0" // ou autre version Node installée dans Jenkins NodeJS pluginn
   }
   agent any
 
